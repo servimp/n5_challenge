@@ -9,7 +9,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = "myakscluster"
 
   tags = {
-    "Environment" = "Test"
+    "Environment" = "Test_N5"
   }
 
   default_node_pool {
