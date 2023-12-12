@@ -24,6 +24,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 resource "azurerm_resource_group" "aks" {
-  name     = "myAKSResourceGroup"
+  name     = "newAKSResourceGroup"
   location = "East US"
 }
