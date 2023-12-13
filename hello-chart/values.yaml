@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: nginxdemos/hello
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+env:
+  name: "default"
+
+secretValue: "defaultSecret"

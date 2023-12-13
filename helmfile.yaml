@@ -1,0 +1,15 @@
+environments:
+  dev:
+    values:
+      - envValues/dev.yaml
+  stage:
+    values:
+      - envValues/stage.yaml
+
+releases:
+  - name: hello-app
+    namespace: default
+    chart: ./hello-chart
+    version: 0.1.0
+    values:
+      - hello-chart/values.yaml

@@ -2,15 +2,16 @@ provider "azurerm" {
   features {}
 }
 
+resource "azurerm_resource_group" "aks" {
+  name     = "newAKSResourceGroup"
+  location = "East US"
+}
+
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "myAKSCluster"
-  location            = "East US"
+  location            = azurerm_resource_group.aks.location
   resource_group_name = azurerm_resource_group.aks.name
   dns_prefix          = "myakscluster"
-
-  tags = {
-    "Environment" = "Test_N5"
-  }
 
   default_node_pool {
     name       = "default"
@@ -21,9 +22,27 @@ resource "azurerm_kubernetes_cluster" "aks" {
   identity {
     type = "SystemAssigned"
   }
+
+  tags = {
+    Environment = "Test_N5"
+  }
 }
 
-resource "azurerm_resource_group" "aks" {
-  name     = "newAKSResourceGroup"
-  location = "East US"
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
+}
+
+resource "kubernetes_namespace" "dev_namespace" {
+  metadata {
+    name = "dev-namespace"
+  }
+}
+
+resource "kubernetes_namespace" "stage_namespace" {
+  metadata {
+    name = "stage-namespace"
+  }
 }
