@@ -24,7 +24,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   tags = {
-    Environment = "Test_N5"
+    Environment = "Test_N5_Dev_Stage"
   }
 }
 
