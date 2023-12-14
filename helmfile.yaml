@@ -2,16 +2,15 @@ environments:
   dev:
     values:
       - envValues/dev.yaml
-    namespace: dev-namespace
   stage:
     values:
       - envValues/stage.yaml
-    namespace: stage-namespace
 
 releases:
   - name: hello-app
-    namespace: "{{ .Namespace }}"
+    namespace: "{{ .Values.namespace }}"
     chart: ./hello-chart
     version: 0.1.0
     values:
       - hello-chart/values.yaml
+      - "{{ .Environment.Values }}"
