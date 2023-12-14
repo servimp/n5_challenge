@@ -1,4 +1,4 @@
-name: 'Infrastructure and Application Deployment'
+name: 'Terraform'
 
 on:
   push:
@@ -6,15 +6,14 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: 'Deploy Infrastructure and Applications'
+  terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    # Terraform Steps
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -23,14 +22,6 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    - name: Import Resource Group
-      run: terraform import azurerm_resource_group.aks /subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/newAKSResourceGroup2
-      env:
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-
     - name: Terraform Apply
       run: terraform apply -auto-approve
       env:
@@ -38,28 +29,3 @@ jobs:
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-
-    # Helm and Helmfile Setup
-    - name: Set up Helm
-      uses: azure/setup-helm@v1
-
-    - name: Set up Helmfile
-      run: |
-        curl -L https://github.com/roboll/helmfile/releases/download/v0.139.9/helmfile_linux_amd64 --output helmfile
-        chmod +x helmfile
-        sudo mv helmfile /usr/local/bin/helmfile
-
-    # Kubernetes Cluster Configuration
-    - name: Configure AKS credentials
-      uses: azure/aks-set-context@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        cluster-name: myAKSCluster
-        resource-group: newAKSResourceGroup2
-
-    # Helmfile Deployment
-    - name: Deploy to dev environment
-      run: helmfile -e dev apply
-
-    - name: Deploy to stage environment
-      run: helmfile -e stage apply
