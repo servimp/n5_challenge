@@ -17,5 +17,3 @@ releases:
     version: 0.1.0
     values:
       - hello-chart/values.yaml
-      - envValues/dev.yaml    # Explicitly specify for dev
-      - envValues/stage.yaml  # Explicitly specify for stage
