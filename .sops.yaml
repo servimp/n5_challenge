@@ -1,0 +1,5 @@
+creation_rules:
+  - encrypted_regex: '^(data|stringData)$'
+    gpg:
+      recipients:
+        - 5A99E17462732950B6BE75ED2EF24CFE2D456658
