@@ -9,11 +9,21 @@ environments:
       - envValues/stage.yaml
       - secrets/stage-secrets.yaml
 
-
 releases:
-  - name: hello-app
-    namespace: "{{ .Values.namespace }}"
+  - name: hello-app-dev
+    namespace: dev-namespace
     chart: ./hello-chart
-    version: 0.1.0
+    version: 0.1.5
     values:
       - hello-chart/values.yaml
+      - envValues/dev.yaml
+      - secrets/dev-secrets.yaml
+
+  - name: hello-app-stage
+    namespace: stage-namespace
+    chart: ./hello-chart
+    version: 0.1.5
+    values:
+      - hello-chart/values.yaml
+      - envValues/stage.yaml
+      - secrets/stage-secrets.yaml
