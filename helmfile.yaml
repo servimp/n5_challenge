@@ -13,7 +13,7 @@ releases:
   - name: hello-app-dev
     namespace: dev-namespace
     chart: ./hello-chart
-    version: 0.1.5
+    version: 0.1.6
     values:
       - hello-chart/values.yaml
       - envValues/dev.yaml
@@ -22,7 +22,7 @@ releases:
   - name: hello-app-stage
     namespace: stage-namespace
     chart: ./hello-chart
-    version: 0.1.5
+    version: 0.1.6
     values:
       - hello-chart/values.yaml
       - envValues/stage.yaml

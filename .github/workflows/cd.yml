@@ -1,0 +1,60 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Kubernetes context
+      uses: azure/setup-k8s@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: myAKSCluster
+        resource-group: newAKSResourceGroup2
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+
+    - name: Set up Helmfile
+      run: |
+        curl -L --output helmfile https://github.com/roboll/helmfile/releases/download/v0.139.9/helmfile_linux_amd64
+        chmod +x helmfile
+        sudo mv helmfile /usr/local/bin/helmfile
+
+    - name: Deploy to Dev Environment
+      run: helmfile -e dev apply
+
+  deploy-stage:
+    runs-on: ubuntu-latest
+    environment: stage
+    needs: deploy-dev
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Kubernetes context
+      uses: azure/setup-k8s@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: myAKSCluster
+        resource-group: newAKSResourceGroup2
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+
+    - name: Set up Helmfile
+      run: |
+        curl -L --output helmfile https://github.com/roboll/helmfile/releases/download/v0.139.9/helmfile_linux_amd64
+        chmod +x helmfile
+        sudo mv helmfile /usr/local/bin/helmfile
+
+    - name: Deploy to Stage Environment
+      run: helmfile -e stage apply
