@@ -58,6 +58,7 @@ This project uses SOPS (Secrets OPerationS) for secure secret management. SOPS e
 ## Creating and Updating Secrets
 Encrypting Secrets:
 
+- Note: The current encrypted files are `secrets/dev-secrets.yaml` and `secrets/stage-secrets.yaml` the secret files to create in first place are unencrypted, after following these steps, you will end with the encrypted files similar to the actual ones.
 - Create a YAML file containing the secrets you wish to encrypt.
 - Use SOPS with your RSA public key to encrypt the file:
 `sops --encrypt --pgp [RSA public key ID] [plain secrets file] > [encrypted secrets file]`
