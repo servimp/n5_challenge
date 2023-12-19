@@ -40,12 +40,35 @@ For the GitHub Actions workflows to function correctly, the following secrets mu
    
    `az ad sp create-for-rbac --name "myAKSClusterSP" --role contributor --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group} --sdk-auth`
 
-- Replace {subscription-id} and {resource-group} with your actual subscription ID and resource group name. This command will output the credentials needed.
+    - Replace {subscription-id} and {resource-group} with your actual subscription ID and resource group name. This command will output the credentials needed.
 
 2. **Add Secrets to GitHub Repository**:
-- Go to your GitHub repository.
-- Navigate to 'Settings' > 'Secrets'.
-- Click 'New repository secret' and add each of the above secrets.
+    - Go to your GitHub repository.
+    - Navigate to 'Settings' > 'Secrets'.
+    - Click 'New repository secret' and add each of the above secrets.
+
+### Managing Encrypted Secrets with SOPS
+## Overview
+This project uses SOPS (Secrets OPerationS) for secure secret management. SOPS encrypts secrets using a 4096-bit RSA key. The encrypted secrets are then manually updated in the Kubernetes environment using kubectl.
+
+## Prerequisites
+- SOPS installed on your local machine.
+- Access to a 4096-bit RSA private/public key pair for encryption and decryption.
+
+## Creating and Updating Secrets
+Encrypting Secrets:
+
+- Create a YAML file containing the secrets you wish to encrypt.
+- Use SOPS with your RSA public key to encrypt the file:
+`sops --encrypt --pgp [RSA public key ID] [plain secrets file] > [encrypted secrets file]`
+
+## Updating Secrets in Kubernetes:
+
+- After encrypting the secrets, you need to update them manually in the Kubernetes environment.
+- Use kubectl to apply the secrets to your Kubernetes cluster:
+`kubectl create secret generic [secret-name] --from-file=[encrypted secrets file] -n [namespace]`
+
+- Note: Replace [secret-name], [encrypted secrets file], and [namespace] with your specific secret name, file name, and Kubernetes namespace.
 
 ## Usage
 ### Deploying to AKS
